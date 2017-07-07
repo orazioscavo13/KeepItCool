@@ -47,7 +47,7 @@ def Invia_info(bot,update):
 
 def main():
 	#inizializza l'oggetto updater sul nostro bot, di cui indichiamo il token, l'updater ha il compito di rilevare aggiornamenti dai server di telegram riguardanti messaggi inviati al bot
-	updater = Updater("386429372:AAG7xgNjODVqBFg517NpbmhDNDbpVEdtO5M")
+	updater = Updater("TOKEN")
 	#inizializza l'oggetto dispatcher, che raccoglie gli aggiornamenti colti dall'updater e li gira a diversi handler in base al contenuto di questi
 	dp=updater.dispatcher
 	#Definiamo un handler per la ricezione del comando "info", questo handler lancia la funzione info

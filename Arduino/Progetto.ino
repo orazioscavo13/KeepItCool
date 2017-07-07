@@ -5,9 +5,9 @@
 #include<Bridge.h> // libreria che permette le chiamate res, utile per le funzionalità di rete
 #include<BridgeServer.h>
 #include<BridgeClient.h>
-#include<Process.h>//Necessaria per il funzionamento di bridge, permette di fare il run di un comando da Shell in modo asincrono 
+#include<Process.h>//Necessaria per il funzionamento di bridge, permette di fare il run di un comando da Shell in modo asincrono
 #include<HttpClient.h> // permette di effettuare HTTPRequest
-#include<SoftwareSerial.h> //contiene le funzioni per la gestione delle seriali software 
+#include<SoftwareSerial.h> //contiene le funzioni per la gestione delle seriali software
 BridgeServer server; // di default ascolta sulla porta 5555
 float soglia;
 int addr = 0;
@@ -51,10 +51,10 @@ void setup() {
 void loop() {
 
 //-------------------------------------------------------------------------------------------//
-// Arduino si mette in ascolto sulla seriale software: se riceve un 1 (da STM32) incrementa 
+// Arduino si mette in ascolto sulla seriale software: se riceve un 1 (da STM32) incrementa
 //la soglia di un grado, se riceve 2 decrementa la soglia di 1 grado
 
-  myserial.listen();// mette in ascolto la seriale software su una porta; non vi può essere più di una seriale in ascolto; i dati in arrivo sulle altre porte verranno scartati 
+  myserial.listen();// mette in ascolto la seriale software su una porta; non vi può essere più di una seriale in ascolto; i dati in arrivo sulle altre porte verranno scartati
   if (myserial.available){// prende il numero di byte disponibile per la lettura dalla seriale software
     if(myserial.read()==49) //legge dalla seriale e confronta il valore
     {
@@ -63,12 +63,12 @@ void loop() {
     }
     if(myserial.read()==50){
       decrementa();
-      Serial.println("Nuova soglia: " + (String)soglia); 
+      Serial.println("Nuova soglia: " + (String)soglia);
     }
   }
-//-------------------------------------------------------------------------------------------//  
+//-------------------------------------------------------------------------------------------//
 
-//-------------------------------------------------------------------------------------------//  
+//-------------------------------------------------------------------------------------------//
 
 current_time=millis();//ritorna il numero di millisecondi dall'inizio dell'esecuzione
 if(current_time-loop_time>=1000){ //fa in modo che le seguenti operazioni siano effettuate ogni secondo
@@ -76,7 +76,7 @@ if(current_time-loop_time>=1000){ //fa in modo che le seguenti operazioni siano 
     digitalWrite(8,LOW);  // imposta il pin 8 a LOW
     digitalWrite(13,LOW); // imposta il pin 13 a LOW
     loop_time=current_time; //necessario nel prossimo ciclo come riferimento
-    
+
     //leggo il valore dato dal sensore di temperatura collegato al pin analogico A1 e deduco la  temperatura in gradi Celsius
     float val = analogRead(1);// lettura dal pin analogico 1;
     float cel = (val/1024)*500; //0->-55°C; 1024->150°C (FORSE)
@@ -101,27 +101,26 @@ if(current_time-loop_time>=1000){ //fa in modo che le seguenti operazioni siano 
           addr=0; //sovrascrive dall'inizio
         }
          if(flag){
-          notifica("143329689"); //invia un messaggio telegram di warning
+          notifica("chat_id"); //invia un messaggio telegram di warning
           flag=false;// setta il flag a false per la prossima iterazione
           }
       }
       //se la temperatura rilevata è maggiore  della soglia impostata, salvo nella memoria SD la data, l'ora e la temperatura attuali.
       if(cel>soglia && sd){
       digitalWrite(8,HIGH); //accende il pin rosso
-      analogWrite(3,255); //Da corrente al transistor, che altrimenti bloccherebbe il passaggio della corrente verso la ventola (interruttore in regione non lineare)   
+      analogWrite(3,255); //Da corrente al transistor, che altrimenti bloccherebbe il passaggio della corrente verso la ventola (interruttore in regione non lineare)
       File temperature=FileSystem.open("/mnt/sda1/temperatura.txt",FILE_APPEND); //append sul file temperatura all'interno della SD
-      temperature.println(getTimeStamp() + "- Temperatura rilevata: " + (String)cel + "°C");// stampa la data 
+      temperature.println(getTimeStamp() + "- Temperatura rilevata: " + (String)cel + "°C");// stampa la data
       Serial.println("Sto scrivendo nella SD");
       temperature.close(); // Chiude il file system dell'SD
       }else analogWrite(3,0); //spegne la ventola se accesa
       }
       BridgeClient client = server.accept();  // Verifica la presenza di eventuali client
-      if (client) {    
+      if (client) {
       process(client); //La  richiesta viene processata(Vedi in Funzioni_Web)
       client.stop();
       }
- 
+
 }
 
-//-------------------------------------------------------------------------------------------//  
-
+//-------------------------------------------------------------------------------------------//
