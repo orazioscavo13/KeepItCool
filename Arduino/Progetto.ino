@@ -9,6 +9,7 @@
 #include<HttpClient.h> // permette di effettuare HTTPRequest
 #include<SoftwareSerial.h> //contiene le funzioni per la gestione delle seriali software
 BridgeServer server; // di default ascolta sulla porta 5555
+String mychat = "";
 float soglia;
 int addr = 0;
 int first_time=0; //necessaria per il calcolo del tempo trascorso con la funzione millis()
@@ -101,7 +102,7 @@ if(current_time-loop_time>=1000){ //fa in modo che le seguenti operazioni siano 
           addr=0; //sovrascrive dall'inizio
         }
          if(flag){
-          notifica("chat_id"); //invia un messaggio telegram di warning
+          notifica(mychat); //invia un messaggio telegram di warning
           flag=false;// setta il flag a false per la prossima iterazione
           }
       }
